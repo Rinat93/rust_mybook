@@ -5,6 +5,8 @@ mod trait_book;
 mod lamdba;
 mod iterators;
 mod file;
+mod threads;
+
 fn main() {
     println!("---------ENUM-------------");
     enum_book::Enums::server();
@@ -18,4 +20,6 @@ fn main() {
     iterators::Iters::start();
     println!("---------Files-------------");
     file::Files_book::start();
+    println!("---------Thread-------------");
+    threads::Threads::start();
 }
