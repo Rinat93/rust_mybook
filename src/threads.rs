@@ -6,26 +6,30 @@ pub mod Threads {
     use std::sync::mpsc::channel;
     use std::path::PathBuf;
     use std::thread::spawn;
+    use std::thread;
+    use std::time::Duration;
 
     /// Ошибки
-    fn proccess_starts<T>(documents: Vec<&T>) -> io::Result<()> {
+    fn proccess_starts(documents: Vec<&'static str>){
+        
         let (sender, receiver) = channel();
 
-        let handle = spawn(move || {
-            for filename in documents {
-                let mut f = File::open(filename)?;
-                let mut text = String::new();
-                f.read_to_string(&mut text)?;
-                if sender.send(text).is_err() {
-                    break;
-                }
+        spawn(move || {
+            let se = documents;
+            for i in se{
+                sender.send(i).unwrap();
+                thread::sleep(Duration::from_secs(1));
             }
         });
-        Ok(())
+        
+        // let received = receiver.recv().unwrap();
+        for i in receiver  {
+            println!("Got: {}", i);
+        }
     }
 
     pub fn start() {
         let files: Vec<&str> = vec!["test12.txt","test12.txt","test12.txt","test12.txt","test12.txt","test12.txt"];
-        let res = proccess_starts(files)?;
+        let res = proccess_starts(files);
     }    
 }
